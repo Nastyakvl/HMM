@@ -1,6 +1,5 @@
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -9,48 +8,77 @@ import java.util.Scanner;
 public class main {
     public static void main(String[] args) {
         Scanner sc;
-        int N;//amount of rows
-        int M;//amount of columns
+        int N;//amount of states(rows and columns)
         int K;//amount of observations
         String obs[];//enum of observation
         double[][] a;//transition probability matrix
         double[][] b;//observations likelihoods
+        double[] pi;////initial probability distribution
+
+        String filepi=args[0];
+        String fileA=args[1];
+        String fileB=args[2];
+        int count=Integer.parseInt(args[3]);
+
 
 
         try {
-            sc = new Scanner(new FileInputStream("a"));
-            N = sc.nextInt();
-            M = sc.nextInt();
 
-            a = new double[M][N];
-            for (int i = 0; i < M; i++)
+            sc = new Scanner(new FileInputStream(filepi));
+            N = sc.nextInt();
+            pi = new double[N];
+            for (int i = 0; i < N; i++)
+                pi[i] = sc.nextDouble();
+
+            sc = new Scanner(new FileInputStream(fileA));
+            a = new double[N][N];
+            for (int i = 0; i < N; i++)
                 for (int j = 0; j < N; j++)
                     a[i][j] = sc.nextDouble();
 
 
-            sc = new Scanner(new FileInputStream("b"));
+            sc = new Scanner(new FileInputStream(fileB));
             K = sc.nextInt();
             obs=new String[K];
             for(int i=0;i<K;i++)
                 obs[i]=sc.next();
 
 
-            b = new double[K][N-1];
+            b = new double[K][N];
             for (int i = 0; i < K; i++)
-                for (int j = 0; j < N-1; j++)
+                for (int j = 0; j < N; j++)
                     b[i][j] = sc.nextDouble();
 
-            int count = 10;
 
-            HMM<String> hmm = new HMM(a, b, obs);
 
+
+            HMM<String> hmm = new HMM(a, b, pi,obs);
+            hmm.start();
+            System.out.println("Observation: " +hmm.observe());
+
+
+            //FileWriter writer1= new FileWriter("dataState1.txt",false);
+            //FileWriter writer2= new FileWriter("dataState2.txt",false);
             for (int i = 0; i < count; i++) {
                 hmm.next();
-                System.out.println("Observation: " + hmm.observe());
+                String observation=hmm.observe();
+                System.out.println("Observation: " + observation);
+               /* int k=Arrays.asList(obs).indexOf(observation)+1;
+                if(hmm.getState()==0)
+                   writer1.append(""+k+";");
+                else if(hmm.getState()==1)writer2.append(""+k+";");*/
+
             }
+
+          //  writer1.flush();
+           // writer2.flush();
+
+
 
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
