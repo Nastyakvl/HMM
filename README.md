@@ -6,6 +6,7 @@ Generator of observations in Hidden Markov Model
 1. Name of file with starting probabilities
     first string - dimension
     second - probabilities
+    
 Example:
 2
 0,6 0,4
