@@ -15,6 +15,7 @@ Generator of observations in Hidden Markov Model
 
 **Example:**
 ```
+# matrix with the transition probabilities
 0,6 0,4
 0,3 0,7
 ```
@@ -25,7 +26,7 @@ Generator of observations in Hidden Markov Model
 ```
 3                                         #dimension
 OneIceCream TwoIceCream ThreeIceCream     # states
-0,2 0,5
+0,2 0,5                                   # matrix with the emission probabilities
 0,4 0,4
 0,4 0,1
 ```
